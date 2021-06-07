@@ -1,0 +1,24 @@
+"""
+Metaclass for singhle object:
+usage:
+    class MyClass(BaseClass, metaclass=Singleton):
+        pass
+"""
+
+class Singleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
+
+if __name__ == "__main__":
+    
+    class MyClass(object, metaclass=Singleton):
+        pass
+
+    a = MyClass()
+    print(hex(id(a)))
+    
+    b = MyClass()
+    print(hex(id(b)))
