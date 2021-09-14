@@ -10,11 +10,22 @@ class OptionType(Enum):
     Put = -1
     Call = 1
 
+    def __str__(self):
+        return self.name
+
 class Option(Instrument):
     def __init__(self, payoff, execrise) -> None:
         super().__init__()
         self._payoff = payoff
         self._execrise = execrise
+
+    @property
+    def type(self):
+        return self._type
+ 
+    @type.setter
+    def type(self,type_):
+        self._type = OptionType[type_.capitalize()]
 
     @property
     def payoff(self):
@@ -23,22 +34,22 @@ class Option(Instrument):
     @property
     def exercise(self):
         return self._execrise
-    
+        
     def setupArguments(self):
-        self._engine._arguments = OptionArgument(self._payoff, self._execrise)
+        self._arguments = self.Argument(self._payoff, self._execrise)
+
+    class Arguments(Arguments):
+        def __init__(self, payoff = None, execrise = None):
+            super().__init__()
+            self._payoff = payoff
+            self._execrise = execrise
+
+        def validate(self):
+            RW_Require(self, "_payoff")
+            RW_Require(self, "_execrise")
 
 
-class OptionArgument(Arguments):
-    def __init__(self, payoff = None, execrise = None):
-        super().__init__()
-        self._payoff = payoff
-        self._execrise = execrise
-
-    def validate(self):
-        RW_Require(self, "_payoff")
-        RW_Require(self, "_execrise")
-
-
+# addtional Optional Results
 class Greeks(Results):
     def __init__(self):
         super().__init__()
@@ -57,7 +68,7 @@ class Greeks(Results):
         self._rho = None
         self.dividendRho = None
 
-
+# additional Otion Result 
 class MoreGreeks(Results):
     def __init__(self):
         super().__init__()
@@ -76,4 +87,5 @@ class MoreGreeks(Results):
 
 
 if __name__ == "__main__":
-    print(OptionType.Put)
+    Option.Arguments()
+    print("succeed")

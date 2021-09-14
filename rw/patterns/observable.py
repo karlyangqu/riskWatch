@@ -4,13 +4,13 @@ from abc import ABC,abstractmethod
 class Observable:
 
     def __init__(self) -> None:
-        self._observers = weakref.WeakKeyDictionary()
+        self._observers = weakref.WeakSet()
 
     def register(self, o):
-        self._observers[o] = 1
+        self._observers.add(o)
 
     def unregister(self, o):
-        del self._observers[o]
+        self._observers.remove(o)
 
     def unregisterAll(self):
         self._observers = weakref.WeakKeyDictionary()
